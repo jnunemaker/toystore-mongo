@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ['John Nunemaker']
   s.email       = ['nunemaker@gmail.com']
   s.homepage    = ''
-  s.summary     = %q{TODO: Mongo integration for Toystore}
-  s.description = %q{TODO: Mongo integration for Toystore}
+  s.summary     = %q{Mongo integration for Toystore}
+  s.description = %q{Mongo integration for Toystore}
 
   s.add_dependency('plucky', '~> 0.4.0')
   s.add_dependency('toystore', '~> 0.6.5')
