@@ -1,7 +1,4 @@
 source "http://rubygems.org"
-
-# Specify your gem's dependencies in toystore-mongo.gemspec
-gem 'toystore', :path => '/Users/jnunemaker/projects/toystore'
 gemspec
 
 group(:development) do
