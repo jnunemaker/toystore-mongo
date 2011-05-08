@@ -53,7 +53,7 @@ module Toy
         changed.each do |key|
           attribute = self.class.attributes[key.to_s]
           next if attribute.virtual?
-          attrs[attribute.store_key] = pattrs[attribute.store_key]
+          attrs[attribute.persisted_name] = pattrs[attribute.persisted_name]
         end
         attrs
       end

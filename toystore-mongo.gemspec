@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.description = %q{Mongo integration for Toystore}
 
   s.add_dependency('plucky', '~> 0.4.0')
-  s.add_dependency('toystore', '~> 0.6.6')
+  s.add_dependency('toystore', '~> 0.7.0')
   s.add_dependency('adapter-mongo', '~> 0.5.2')
 
   s.files         = `git ls-files`.split("\n") - ['specs.watchr']
