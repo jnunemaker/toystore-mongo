@@ -35,7 +35,6 @@ module Support
         """ if name
         model.send(:include, Toy::Store)
         model.store(:mongo, STORE)
-        model.key(:object_id)
       end
     end
   end

@@ -1,7 +1,9 @@
 require 'plucky'
 require 'toy'
+require 'toy/identity/object_id_key_factory'
 require 'toy/mongo/querying'
 require 'adapter/mongo'
+
 
 module Toy
   module Mongo
@@ -13,4 +15,5 @@ module Toy
   end
 end
 
+Toy.key_factory = Toy::Identity::ObjectIdKeyFactory.new
 Toy.plugin(Toy::Mongo)
