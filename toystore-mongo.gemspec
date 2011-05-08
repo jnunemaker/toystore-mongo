@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency('toystore', '~> 0.6.5')
   s.add_dependency('adapter-mongo', '~> 0.5.2')
 
-  s.files         = `git ls-files`.split("\n")
+  s.files         = `git ls-files`.split("\n") - ['specs.watchr']
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
