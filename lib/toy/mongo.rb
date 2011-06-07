@@ -1,9 +1,9 @@
 require 'plucky'
 require 'toy'
+require 'toy/extensions/bson_object_id'
 require 'toy/identity/object_id_key_factory'
 require 'toy/mongo/querying'
 require 'adapter/mongo'
-
 
 module Toy
   module Mongo
