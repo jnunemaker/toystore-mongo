@@ -6,6 +6,23 @@ Mongo integration for Toystore.
 
   $ gem install toystore-mongo
 
+== Usage
+
+  class User
+    include Toy::Mongo
+    store Mongo::Connection.new.db('myapp')['users']
+
+    attribute :name, String
+  end
+
+Including Toy::Mongo includes Toy::Store and then does a few things:
+
+* Includes Plucky querying so you can do things like User.count, User.all, User.first, and much more
+* Sets the key factory to object id
+* Overrides get so that it also works with string representation of object id
+* Overrides get_multi so that it performs one query instead of one query per id
+* Adds instance method atomic_update_attributes for persisting only the changes (see #persistable_changes)
+
 == Note on Patches/Pull Requests
 
 * Fork the project.
