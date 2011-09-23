@@ -4,6 +4,7 @@ describe Toy::Mongo::Querying do
   uses_constants('User')
 
   before(:each) do
+    User.send(:include, CallbacksHelper)
     User.identity_map_off
     User.attribute(:name, String)
     User.attribute(:bio, String)
@@ -46,6 +47,12 @@ describe Toy::Mongo::Querying do
       User.store(:mongo, STORE, :safe => true)
       @user.store.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => true)
       @user.atomic_update('$set' => {'name' => 'Frank'})
+    end
+
+    it "runs callbacks in correct order" do
+      doc = User.create.tap(&:clear_history)
+      doc.atomic_update({})
+      doc.history.should == [:before_save, :before_update, :after_update, :after_save]
     end
 
     context "with :safe option" do

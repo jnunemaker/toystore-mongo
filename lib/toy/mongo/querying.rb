@@ -93,7 +93,12 @@ module Toy
         criteria = {'_id' => id}
         criteria.update(opts[:criteria]) if opts[:criteria]
         options[:safe] = opts.key?(:safe) ? opts[:safe] : store.options[:safe]
-        store.client.update(criteria, update, options)
+
+        run_callbacks(:save) do
+          run_callbacks(:update) do
+            store.client.update(criteria, update, options)
+          end
+        end
       end
     end
   end

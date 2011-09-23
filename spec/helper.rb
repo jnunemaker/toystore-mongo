@@ -15,6 +15,7 @@ Bundler.require(:development)
 
 require 'toy/mongo'
 require 'support/constants'
+require 'support/callbacks_helper'
 
 STORE = Mongo::Connection.new.db('testing')['toystore-mongo']
 
