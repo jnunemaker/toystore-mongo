@@ -33,7 +33,7 @@ module Support
           def self.name; '#{name}' end
           def self.to_s; '#{name}' end
         """ if name
-        model.send(:include, Toy::Store)
+        model.send(:include, Toy::Mongo)
         model.store(:mongo, STORE)
       end
     end

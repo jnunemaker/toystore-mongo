@@ -10,10 +10,10 @@ module Toy
     extend ActiveSupport::Concern
 
     included do
+      include Toy::Store
       include Querying
+
+      key(Toy::Identity::ObjectIdKeyFactory.new)
     end
   end
 end
-
-Toy.key_factory = Toy::Identity::ObjectIdKeyFactory.new
-Toy.plugin(Toy::Mongo)
