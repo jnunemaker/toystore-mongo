@@ -29,6 +29,26 @@ module Toy
           end
         end
 
+        def get(id)
+          super Plucky.to_object_id(id)
+        end
+
+        # Mongo does not guarantee sort order when using $in.
+        # So we manually sort in ruby for now. Not stoked about
+        # this, but it gets the job done.
+        def get_multi(*ids)
+          ids  = ids.flatten
+          all(:_id => {'$in' => ids}).sort do |a, b|
+            index_a = ids.index(a.id)
+            index_b = ids.index(b.id)
+            if index_a.nil? || index_b.nil?
+              1
+            else
+              index_a <=> index_b
+            end
+          end
+        end
+
         def query
           # TODO: add object id keys to convert
           Plucky::Query.new(store.client, :transformer => transformer).object_ids(object_id_attributes)
