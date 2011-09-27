@@ -81,8 +81,14 @@ module Toy
       def atomic_update_attributes(attrs={})
         self.attributes = attrs
         if valid?
-          atomic_update('$set' => persistable_changes)
-          true
+          run_callbacks(:save) do
+            run_callbacks(:update) do
+              criteria = {'_id' => id}
+              update   = {'$set' => persistable_changes}
+              store.client.update(criteria, update, {:safe => store.options[:safe]})
+              true
+            end
+          end
         else
           false
         end

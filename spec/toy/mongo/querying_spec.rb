@@ -135,8 +135,40 @@ describe Toy::Mongo::Querying do
     end
 
     it "only persists changes" do
-      @user.should_receive(:atomic_update).with('$set' => {'name' => 'Frank'})
+      query = {'_id' => @user.id}
+      update = {'$set' => {'name' => 'Frank'}}
+      @user.store.client.should_receive(:update).with(query, update, {:safe => nil})
       @user.atomic_update_attributes(:name => 'Frank')
+    end
+
+    it "persists changes with safe option from store" do
+      User.store(:mongo, STORE, :safe => true)
+      query = {'_id' => @user.id}
+      update = {'$set' => {'name' => 'Frank'}}
+      @user.store.client.should_receive(:update).with(query, update, {:safe => true})
+      @user.atomic_update_attributes(:name => 'Frank')
+    end
+
+    it "runs callbacks in correct order" do
+      doc = User.create.tap(&:clear_history)
+      doc.name = 'John Nunemaker'
+      doc.atomic_update_attributes
+      doc.history.should == [:before_save, :before_update, :after_update, :after_save]
+    end
+
+    it "persists changes that happen in callbacks" do
+      User.class_eval do
+        attribute :name_lower, String
+
+        before_save do |record|
+          record.name_lower = name
+        end
+      end
+
+      user = User.create(:name => 'Frank')
+      user.atomic_update_attributes('name' => 'John')
+      user.name_lower.should == 'John'
+      user.reload.name_lower.should == 'John'
     end
   end
 
