@@ -1,10 +1,8 @@
 source "http://rubygems.org"
 gemspec
 
-require 'plucky/version'
-
 group(:development) do
-  gem 'bson_ext', Plucky::MongoVersion, :require => false
+  gem 'bson_ext', :require => false
   gem 'SystemTimer', :platform => :ruby_18
   gem 'rake',       '~> 0.8.7'
   gem 'rspec',      '~> 2.3'
