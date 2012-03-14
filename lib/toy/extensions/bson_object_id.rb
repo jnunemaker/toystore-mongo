@@ -1,9 +1,13 @@
-class BSON::ObjectId
-  def self.to_store(value, *)
+module ObjectIdConversions
+  def to_store(value, *)
     Plucky.to_object_id(value)
   end
 
-  def self.from_store(value, *args)
+  def from_store(value, *)
     Plucky.to_object_id(value)
   end
+end
+
+class BSON::ObjectId
+  extend ObjectIdConversions
 end
