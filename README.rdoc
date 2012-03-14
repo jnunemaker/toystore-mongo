@@ -10,7 +10,7 @@ Mongo integration for Toystore.
 
   class User
     include Toy::Mongo
-    store Mongo::Connection.new.db('myapp')['users']
+    adapter :mongo, Mongo::Connection.new.db('myapp')['users']
 
     attribute :name, String
   end

@@ -5,7 +5,6 @@ describe Toy::Mongo::Querying do
 
   before(:each) do
     User.send(:include, CallbacksHelper)
-    User.identity_map_off
     User.attribute(:name, String)
     User.attribute(:bio, String)
   end
@@ -36,16 +35,16 @@ describe Toy::Mongo::Querying do
       @user.name.should == 'Frank'
     end
 
-    it "defaults to store's :safe option" do
-      @user.store.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => nil)
+    it "defaults to adapter's :safe option" do
+      @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => nil)
       @user.atomic_update('$set' => {'name' => 'Frank'})
 
-      User.store(:mongo, STORE, :safe => false)
-      @user.store.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => false)
+      User.adapter(:mongo, STORE, :safe => false)
+      @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => false)
       @user.atomic_update('$set' => {'name' => 'Frank'})
 
-      User.store(:mongo, STORE, :safe => true)
-      @user.store.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => true)
+      User.adapter(:mongo, STORE, :safe => true)
+      @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => true)
       @user.atomic_update('$set' => {'name' => 'Frank'})
     end
 
@@ -56,13 +55,13 @@ describe Toy::Mongo::Querying do
     end
 
     context "with :safe option" do
-      it "overrides store's :safe option" do
-        User.store(:mongo, STORE, :safe => false)
-        @user.store.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => true)
+      it "overrides adapter's :safe option" do
+        User.adapter(:mongo, STORE, :safe => false)
+        @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => true)
         @user.atomic_update({'$set' => {'name' => 'Frank'}}, :safe => true)
 
-        User.store(:mongo, STORE, :safe => true)
-        @user.store.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => false)
+        User.adapter(:mongo, STORE, :safe => true)
+        @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => false)
         @user.atomic_update({'$set' => {'name' => 'Frank'}}, :safe => false)
       end
     end
@@ -137,15 +136,15 @@ describe Toy::Mongo::Querying do
     it "only persists changes" do
       query = {'_id' => @user.id}
       update = {'$set' => {'name' => 'Frank'}}
-      @user.store.client.should_receive(:update).with(query, update, {:safe => nil})
+      @user.adapter.client.should_receive(:update).with(query, update, {:safe => nil})
       @user.atomic_update_attributes(:name => 'Frank')
     end
 
-    it "persists changes with safe option from store" do
-      User.store(:mongo, STORE, :safe => true)
+    it "persists changes with safe option from adapter" do
+      User.adapter(:mongo, STORE, :safe => true)
       query = {'_id' => @user.id}
       update = {'$set' => {'name' => 'Frank'}}
-      @user.store.client.should_receive(:update).with(query, update, {:safe => true})
+      @user.adapter.client.should_receive(:update).with(query, update, {:safe => true})
       @user.atomic_update_attributes(:name => 'Frank')
     end
 

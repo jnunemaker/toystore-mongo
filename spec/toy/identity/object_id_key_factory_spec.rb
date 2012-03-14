@@ -29,7 +29,7 @@ describe Toy::Identity::ObjectIdKeyFactory do
     it "correctly stores id in database" do
       user = User.create(:name => 'John')
       user.id.should be_instance_of(BSON::ObjectId)
-      key = user.store.client.find_one(user.id)['_id']
+      key = user.adapter.client.find_one(user.id)['_id']
       key.should be_instance_of(BSON::ObjectId)
       user.id.should == key
     end

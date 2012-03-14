@@ -51,7 +51,7 @@ module Toy
 
         def query
           # TODO: add object id keys to convert
-          Plucky::Query.new(store.client, :transformer => transformer).object_ids(object_id_attributes)
+          Plucky::Query.new(adapter.client, :transformer => transformer).object_ids(object_id_attributes)
         end
 
         PluckyMethods.each do |name|
@@ -85,7 +85,7 @@ module Toy
             run_callbacks(:update) do
               criteria = {'_id' => id}
               update   = {'$set' => persistable_changes}
-              store.client.update(criteria, update, {:safe => store.options[:safe]})
+              adapter.client.update(criteria, update, {:safe => adapter.options[:safe]})
               true
             end
           end
@@ -98,11 +98,11 @@ module Toy
         options  = {}
         criteria = {'_id' => id}
         criteria.update(opts[:criteria]) if opts[:criteria]
-        options[:safe] = opts.key?(:safe) ? opts[:safe] : store.options[:safe]
+        options[:safe] = opts.key?(:safe) ? opts[:safe] : adapter.options[:safe]
 
         run_callbacks(:save) do
           run_callbacks(:update) do
-            store.client.update(criteria, update, options)
+            adapter.client.update(criteria, update, options)
           end
         end
       end
