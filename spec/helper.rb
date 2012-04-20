@@ -11,13 +11,13 @@ log_path.mkpath
 require 'rubygems'
 require 'bundler'
 
-Bundler.require(:development)
+Bundler.require(:default, :test)
 
 require 'toy/mongo'
 require 'support/constants'
 require 'support/callbacks_helper'
 
-STORE = Mongo::Connection.new.db('testing')['toystore-mongo']
+STORE = Mongo::Connection.new.db('testing')["toystore-mongo-#{RUBY_VERSION}"]
 
 Logger.new(log_path.join('test.log')).tap do |log|
   LogBuddy.init(:logger => log)
