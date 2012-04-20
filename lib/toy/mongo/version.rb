@@ -1,5 +1,5 @@
 module Toy
   module Mongo
-    VERSION = '0.9.0'
+    VERSION = '0.10.0'
   end
 end
