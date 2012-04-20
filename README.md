@@ -10,12 +10,14 @@ gem install toystore-mongo
 
 ## Usage
 
-  class User
-    include Toy::Mongo
-    adapter :mongo, Mongo::Connection.new.db('myapp')['users']
+```ruby
+class User
+  include Toy::Mongo
+  adapter :mongo, Mongo::Connection.new.db('myapp')['users']
 
-    attribute :name, String
-  end
+  attribute :name, String
+end
+```
 
 Including Toy::Mongo includes Toy::Store and then does a few things:
 
