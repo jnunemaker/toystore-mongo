@@ -3,15 +3,7 @@ module Toy
     module Querying
       extend ActiveSupport::Concern
 
-      PluckyMethods = [
-        :where, :filter, :limit, :skip, :offset, :sort, :order,
-        :fields, :ignore, :only,
-        :each, :find_each,
-        :count, :size, :distinct,
-        :last, :first, :all, :paginate,
-        :exists?, :exist?, :empty?,
-        :to_a, :remove,
-      ]
+      PluckyMethods = Plucky::Methods
 
       module ClassMethods
         def transformer
