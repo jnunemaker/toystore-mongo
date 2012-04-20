@@ -1,12 +1,14 @@
-= Toystore Mongo
+# Toystore Mongo
 
 Mongo integration for Toystore.
 
-== Install
+## Install
 
-  $ gem install toystore-mongo
+```
+gem install toystore-mongo
+```
 
-== Usage
+## Usage
 
   class User
     include Toy::Mongo
@@ -23,7 +25,7 @@ Including Toy::Mongo includes Toy::Store and then does a few things:
 * Overrides get_multi so that it performs one query instead of one query per id
 * Adds instance method atomic_update_attributes for persisting only the changes (see #persistable_changes)
 
-== Note on Patches/Pull Requests
+## Contributing
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -31,6 +33,6 @@ Including Toy::Mongo includes Toy::Store and then does a few things:
 * Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+## Copyright
 
 See LICENSE for details.
