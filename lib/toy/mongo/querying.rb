@@ -42,7 +42,6 @@ module Toy
         end
 
         def query
-          # TODO: add object id keys to convert
           Plucky::Query.new(adapter.client, :transformer => transformer).object_ids(object_id_attributes)
         end
 
