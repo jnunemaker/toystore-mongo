@@ -13,7 +13,7 @@ module Toy
       include Toy::Store
       include Querying
 
-      key(Toy::Identity::ObjectIdKeyFactory.new)
+      key Toy::Identity::ObjectIdKeyFactory.new
     end
   end
 end
