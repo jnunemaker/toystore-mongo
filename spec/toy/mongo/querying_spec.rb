@@ -113,64 +113,6 @@ describe Toy::Mongo::Querying do
     end
   end
 
-  describe "#atomic_update_attributes" do
-    before(:each) do
-      @user = User.create(:name => 'John', :bio => 'I make things simple.')
-    end
-
-    it "updates document" do
-      @user.atomic_update_attributes(:name => 'Frank')
-      @user.reload
-      @user.name.should == 'Frank'
-    end
-
-    it "returns true if valid" do
-      @user.atomic_update_attributes(:name => 'Frank').should be_true
-    end
-
-    it "returns false if invalid" do
-      User.validates_presence_of(:name)
-      @user.atomic_update_attributes(:name => '').should be_false
-    end
-
-    it "only persists changes" do
-      query = {'_id' => @user.id}
-      update = {'$set' => {'name' => 'Frank'}}
-      @user.adapter.client.should_receive(:update).with(query, update, {:safe => nil})
-      @user.atomic_update_attributes(:name => 'Frank')
-    end
-
-    it "persists changes with safe option from adapter" do
-      User.adapter(:mongo, STORE, :safe => true)
-      query = {'_id' => @user.id}
-      update = {'$set' => {'name' => 'Frank'}}
-      @user.adapter.client.should_receive(:update).with(query, update, {:safe => true})
-      @user.atomic_update_attributes(:name => 'Frank')
-    end
-
-    it "runs callbacks in correct order" do
-      doc = User.create.tap(&:clear_history)
-      doc.name = 'John Nunemaker'
-      doc.atomic_update_attributes
-      doc.history.should == [:before_save, :before_update, :after_update, :after_save]
-    end
-
-    it "persists changes that happen in callbacks" do
-      User.class_eval do
-        attribute :name_lower, String
-
-        before_save do |record|
-          record.name_lower = name
-        end
-      end
-
-      user = User.create(:name => 'Frank')
-      user.atomic_update_attributes('name' => 'John')
-      user.name_lower.should == 'John'
-      user.reload.name_lower.should == 'John'
-    end
-  end
-
   describe "#get" do
     before(:each) do
       @user = User.create

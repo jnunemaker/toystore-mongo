@@ -69,22 +69,6 @@ module Toy
         attrs
       end
 
-      def atomic_update_attributes(attrs={})
-        self.attributes = attrs
-        if valid?
-          run_callbacks(:save) do
-            run_callbacks(:update) do
-              criteria = {'_id' => id}
-              update   = {'$set' => persistable_changes}
-              adapter.client.update(criteria, update, {:safe => adapter.options[:safe]})
-              true
-            end
-          end
-        else
-          false
-        end
-      end
-
       def atomic_update(update, opts={})
         options  = {}
         criteria = {'_id' => id}
