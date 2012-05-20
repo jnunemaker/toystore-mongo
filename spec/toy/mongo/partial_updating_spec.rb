@@ -3,16 +3,10 @@ require 'helper'
 describe Toy::Mongo::PartialUpdating do
   uses_constants 'User'
 
-  before(:each) do
-    User.send :include, CallbacksHelper
-    User.attribute :name, String
-    User.attribute :bio, String
-    User.attribute :password, String, :virtual => true
-    User.attribute :email, String, :abbr => :e
-  end
-
   describe "#persistable_changes" do
     before(:each) do
+      User.attribute :name, String
+      User.attribute :bio, String
       User.attribute(:password, String, :virtual => true)
       User.attribute(:email, String, :abbr => :e)
       @user = User.create(:name => 'John', :password => 'secret', :email => 'nunemaker@gmail.com')
@@ -41,6 +35,8 @@ describe Toy::Mongo::PartialUpdating do
 
   describe "#atomic_update" do
     before(:each) do
+      User.send :include, CallbacksHelper
+      User.attribute :name, String
       @user = User.create(:name => 'John')
     end
 
@@ -133,6 +129,9 @@ describe Toy::Mongo::PartialUpdating do
       end
 
       it "only persists changes" do
+        User.attribute :name, String
+        User.attribute :bio, String
+
         user = User.create(:name => 'John', :bio => 'Awesome.')
         user.name = 'Johnny'
 
@@ -147,6 +146,9 @@ describe Toy::Mongo::PartialUpdating do
       end
 
       it "does not persist virtual attributes" do
+        User.attribute :name, String
+        User.attribute :password, String, :virtual => true
+
         user = User.new(:name => 'John')
         user.password = 'hacks'
         user.adapter.should_receive(:write).with(user.id, {
@@ -167,6 +169,7 @@ describe Toy::Mongo::PartialUpdating do
       end
 
       it "works with abbreviated attributes" do
+        User.attribute :email, String, :abbr => :e
         user = User.new(:email => 'john@doe.com')
         user.adapter.should_receive(:write).with(user.id, {
           'e' => 'john@doe.com',
@@ -177,6 +180,8 @@ describe Toy::Mongo::PartialUpdating do
 
     context "with partial updates off" do
       before do
+        User.attribute :name, String
+        User.attribute :bio, String
         User.partial_updates = false
       end
 
