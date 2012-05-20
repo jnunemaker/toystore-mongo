@@ -25,7 +25,27 @@ Including Toy::Mongo includes Toy::Store and then does a few things:
 * Sets the key factory to object id
 * Overrides get so that it also works with string representation of object id
 * Overrides get_multi so that it performs one query instead of one query per id
-* Adds instance method atomic_update_attributes for persisting only the changes (see #persistable_changes)
+
+
+### Atomic Updates
+
+```ruby
+class User
+  include Toy::Mongo
+  include Toy::Mongo::AtomicUpdates
+
+  adapter :mongo_atomic, Mongo::Connection.new.db('adapter')['testing']
+
+  attribute :name, String
+  attribute :bio, String
+end
+
+user = User.create(:name => 'John', :bio => 'Awesome!')
+user.name = 'Nunes'
+user.save # Equivalent to update({:_id => user.id}, {'$set' => {'name' => 'Nunes'}})
+```
+
+Caveat: At this time it only works with simple data types. Complex types like Hash, Array, and Set are not supported. Oddness will ensue if you expect them to work as they can be manipuled through means other than assignment.
 
 ## Contributing
 
