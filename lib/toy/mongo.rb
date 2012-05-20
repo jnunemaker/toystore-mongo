@@ -10,6 +10,8 @@ module Toy
   module Mongo
     extend ActiveSupport::Concern
 
+    class Error < StandardError; end
+
     included do
       include Toy::Store
       include Querying
