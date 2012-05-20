@@ -6,24 +6,8 @@ module Toy
       end
     end
 
-    module PartialUpdating
+    module AtomicUpdates
       extend ActiveSupport::Concern
-
-      included do
-        class_attribute :partial_updates
-
-        self.partial_updates = false
-      end
-
-      module ClassMethods
-        def use_partial_updates
-          if adapter.name != :mongo_atomic
-            raise IncompatibleAdapter.new(adapter.name)
-          end
-
-          self.partial_updates = true
-        end
-      end
 
       # Very basic method for determining what has changed locally
       # so we can just update changes instead of entire document
@@ -43,19 +27,16 @@ module Toy
       end
 
       def persist
-        if partial_updates?
-          if new_record?
-            adapter.write id, persisted_attributes
-          else
-            updates = persistable_changes
-            if updates.present?
-              adapter.write id, updates
-            end
-          end
+        if new_record?
+          adapter.write id, persisted_attributes
         else
-          super
+          updates = persistable_changes
+          if updates.present?
+            adapter.write id, updates
+          end
         end
       end
+      private :persist
 
       def atomic_update(update, opts={})
         options  = {}
