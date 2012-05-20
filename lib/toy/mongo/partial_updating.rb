@@ -39,7 +39,7 @@ module Toy
 
       def atomic_update(update, opts={})
         options  = {}
-        criteria = {'_id' => id}
+        criteria = {:_id => id}
         criteria.update(opts[:criteria]) if opts[:criteria]
         options[:safe] = opts.key?(:safe) ? opts[:safe] : adapter.options[:safe]
 
