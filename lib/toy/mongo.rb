@@ -3,6 +3,7 @@ require 'toy'
 require 'toy/extensions/bson_object_id'
 require 'toy/identity/object_id_key_factory'
 require 'toy/mongo/querying'
+require 'toy/mongo/partial_updating'
 require 'adapter/mongo'
 
 module Toy
@@ -12,6 +13,7 @@ module Toy
     included do
       include Toy::Store
       include Querying
+      include PartialUpdating
 
       key Toy::Identity::ObjectIdKeyFactory.new
     end
