@@ -28,9 +28,13 @@ module Toy
 
       def persist
         if partial_updates?
-          updates = persistable_changes
-          if new_record? || (persisted? && updates.present?)
-            adapter.write id, updates
+          if new_record?
+            adapter.write id, persisted_attributes
+          else
+            updates = persistable_changes
+            if updates.present?
+              adapter.write id, updates
+            end
           end
         else
           super

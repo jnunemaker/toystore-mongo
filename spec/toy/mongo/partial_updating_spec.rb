@@ -145,6 +145,15 @@ describe Toy::Mongo::PartialUpdating do
         user.bio.should eq('Surprise!')
       end
 
+      it "persists default values that did not change" do
+        User.attribute :version, Integer, :default => 1
+        user = User.new
+        user.adapter.should_receive(:write).with(user.id, {
+          'version' => 1,
+        })
+        user.save
+      end
+
       it "does not persist virtual attributes" do
         User.attribute :name, String
         User.attribute :password, String, :virtual => true
