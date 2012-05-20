@@ -1,5 +1,11 @@
 module Toy
   module Mongo
+    class IncompatibleAdapter < Error
+      def initialize(name)
+        super "In order to use partial updates, you need to be using the :mongo_atomic adapter, but you are using :#{name}"
+      end
+    end
+
     module PartialUpdating
       extend ActiveSupport::Concern
 
@@ -7,6 +13,16 @@ module Toy
         class_attribute :partial_updates
 
         self.partial_updates = false
+      end
+
+      module ClassMethods
+        def use_partial_updates
+          if adapter.name != :mongo_atomic
+            raise IncompatibleAdapter.new(adapter.name)
+          end
+
+          self.partial_updates = true
+        end
       end
 
       # Very basic method for determining what has changed locally

@@ -97,27 +97,39 @@ describe Toy::Mongo::PartialUpdating do
   end
 
   describe ".partial_updates" do
+    before do
+      User.adapter :mongo_atomic, STORE
+    end
+
     it "defaults to false" do
       User.partial_updates.should be_false
     end
 
     it "can be turned on" do
-      User.partial_updates = true
+      User.use_partial_updates
       User.partial_updates.should be_true
     end
 
     it "is inherited" do
-      User.partial_updates = true
+      User.use_partial_updates
       subclass = Class.new(User)
       subclass.partial_updates.should be_true
     end
 
     it "is inherited separate from superclass" do
-      User.partial_updates = true
+      User.use_partial_updates
       subclass = Class.new(User)
       subclass.partial_updates = false
       User.partial_updates.should be_true
       subclass.partial_updates.should be_false
+    end
+
+    it "raises an error if not using mongo_atomic" do
+      User.adapter :mongo, STORE
+
+      expect {
+        User.use_partial_updates
+      }.to raise_error Toy::Mongo::IncompatibleAdapter, "In order to use partial updates, you need to be using the :mongo_atomic adapter, but you are using :mongo"
     end
   end
 
