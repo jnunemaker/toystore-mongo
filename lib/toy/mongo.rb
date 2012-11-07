@@ -9,13 +9,12 @@ require 'adapter/mongo'
 module Toy
   module Mongo
     extend ActiveSupport::Concern
+    include Toy::Store
+    include Querying
 
     class Error < StandardError; end
 
     included do
-      include Toy::Store
-      include Querying
-
       key Toy::Identity::ObjectIdKeyFactory.new
     end
   end
