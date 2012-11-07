@@ -4,7 +4,6 @@ gemspec
 gem 'rake', '~> 0.9.0'
 
 # keep mongo and bson ext at same version
-gem 'adapter-mongo', '~> 0.5.5'
 gem 'mongo', '~> 1.6.0'
 gem 'bson_ext', '~> 1.6.0', :require => false
 
