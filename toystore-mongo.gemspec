@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'plucky', '~> 0.5'
   s.add_dependency 'toystore', '~> 0.10'
-  s.add_dependency 'adapter-mongo', '~> 0.5.5'
+  s.add_dependency 'adapter-mongo', '~> 0.7.0'
 
   s.files         = `git ls-files`.split("\n") - ['specs.watchr']
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

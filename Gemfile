@@ -6,6 +6,7 @@ gem 'rake', '~> 0.9.0'
 # keep mongo and bson ext at same version
 gem 'mongo', '~> 1.6.0'
 gem 'bson_ext', '~> 1.6.0', :require => false
+gem 'adapter-mongo', :path => '/Users/jnunemaker/projects/adapter-mongo'
 
 group(:guard) do
   gem 'guard',          '~> 1.0.0'
