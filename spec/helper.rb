@@ -10,7 +10,7 @@ require 'toy/mongo'
 require 'support/constants'
 require 'support/callbacks_helper'
 
-STORE = Mongo::Connection.new.db('testing')["toystore-mongo-#{RUBY_VERSION}"]
+STORE = Mongo::MongoClient.new.db('testing')["toystore-mongo-#{RUBY_VERSION}"]
 
 RSpec.configure do |c|
   c.include(Support::Constants)

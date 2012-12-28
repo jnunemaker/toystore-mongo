@@ -42,7 +42,7 @@ module Toy
         options  = {}
         criteria = {:_id => id}
         criteria.update(opts[:criteria]) if opts[:criteria]
-        options[:safe] = opts.key?(:safe) ? opts[:safe] : adapter.options[:safe]
+        options = adapter.operation_options(nil)
 
         run_callbacks(:save) do
           run_callbacks(:update) do

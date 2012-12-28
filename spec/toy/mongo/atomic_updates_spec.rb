@@ -52,15 +52,24 @@ describe Toy::Mongo::AtomicUpdates do
     end
 
     it "defaults to adapter's :safe option" do
-      @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => nil)
+      User.adapter(:mongo, STORE, :safe => true)
+      @user.adapter.client.should_receive(:update).
+        with(kind_of(Hash), kind_of(Hash), :w => 1)
       @user.atomic_update('$set' => {'name' => 'Frank'})
 
       User.adapter(:mongo, STORE, :safe => false)
-      @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => false)
+      @user.adapter.client.should_receive(:update).
+        with(kind_of(Hash), kind_of(Hash), :w => 0)
       @user.atomic_update('$set' => {'name' => 'Frank'})
 
-      User.adapter(:mongo, STORE, :safe => true)
-      @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => true)
+      User.adapter(:mongo, STORE, :write_concern => {:w => 0})
+      @user.adapter.client.should_receive(:update).
+        with(kind_of(Hash), kind_of(Hash), :w => 0)
+      @user.atomic_update('$set' => {'name' => 'Frank'})
+
+      User.adapter(:mongo, STORE, :write_concern => {:w => 1})
+      @user.adapter.client.should_receive(:update).
+        with(kind_of(Hash), kind_of(Hash), :w => 1)
       @user.atomic_update('$set' => {'name' => 'Frank'})
     end
 
@@ -68,18 +77,6 @@ describe Toy::Mongo::AtomicUpdates do
       doc = User.create.tap(&:clear_history)
       doc.atomic_update({})
       doc.history.should == [:before_save, :before_update, :after_update, :after_save]
-    end
-
-    context "with :safe option" do
-      it "overrides adapter's :safe option" do
-        User.adapter(:mongo, STORE, :safe => false)
-        @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => true)
-        @user.atomic_update({'$set' => {'name' => 'Frank'}}, :safe => true)
-
-        User.adapter(:mongo, STORE, :safe => true)
-        @user.adapter.client.should_receive(:update).with(kind_of(Hash), kind_of(Hash), :safe => false)
-        @user.atomic_update({'$set' => {'name' => 'Frank'}}, :safe => false)
-      end
     end
 
     context "with :criteria option" do
